@@ -22,3 +22,16 @@ func Search(root *Node, key int) *Node {
 		return Search(root.Right, key)
 	}
 }
+
+// SearchI searches for a key in the BST using an iterator.
+// Returns the Node if found, or nil otherwise.
+func SearchI(root *Node, key int) *Node {
+	for root != nil && root.Key != key {
+		if key < root.Key {
+			root = root.Left
+		} else {
+			root = root.Right
+		}
+	}
+	return root
+}

@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestFind1(t *testing.T) {
+func TestSearch(t *testing.T) {
 	root := &Node{Key: 5}
 	root.Left = &Node{Key: 3}
 	root.Left.Left = &Node{Key: 2}
@@ -57,6 +57,57 @@ func TestFind1(t *testing.T) {
 	}
 }
 
+func TestSearchI(t *testing.T) {
+	root := &Node{Key: 5}
+	root.Left = &Node{Key: 3}
+	root.Left.Left = &Node{Key: 2}
+	root.Right = &Node{Key: 7}
+	root.Right.Left = &Node{Key: 6}
+	root.Right.Right = &Node{Key: 8}
+
+	type args struct {
+		root *Node
+		key  int
+	}
+	tests := []struct {
+		name string
+		args args
+		want *Node
+	}{
+		{
+			name: "key_exists",
+			args: args{
+				root: root,
+				key:  7,
+			},
+			want: root.Right,
+		},
+		{
+			name: "key_does_not_exist",
+			args: args{
+				root: root,
+				key:  4,
+			},
+			want: nil,
+		},
+		{
+			name: "nil_root",
+			args: args{
+				root: nil,
+				key:  4,
+			},
+			want: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := SearchI(tt.args.root, tt.args.key); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Find() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func BenchmarkSearch(b *testing.B) {
 	r := rand.New(rand.NewSource(42))
 	// Prepare a BST with 1000 nodes
@@ -67,6 +118,19 @@ func BenchmarkSearch(b *testing.B) {
 		// Search for a random key in the BST
 		key := r.Intn(1000)
 		Search(root, key)
+	}
+}
+
+func BenchmarkSearchI(b *testing.B) {
+	r := rand.New(rand.NewSource(42))
+	// Prepare a BST with 1000 nodes
+	root := generateBST(r, 1000)
+
+	// Run the benchmark
+	for i := 0; i < b.N; i++ {
+		// Search for a random key in the BST
+		key := r.Intn(1000)
+		SearchI(root, key)
 	}
 }
 
