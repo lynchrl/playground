@@ -7,12 +7,7 @@ import (
 )
 
 func TestSearch(t *testing.T) {
-	root := &Node{Key: 5}
-	root.Left = &Node{Key: 3}
-	root.Left.Left = &Node{Key: 2}
-	root.Right = &Node{Key: 7}
-	root.Right.Left = &Node{Key: 6}
-	root.Right.Right = &Node{Key: 8}
+	root := testTree()
 
 	type args struct {
 		root *Node
@@ -58,12 +53,7 @@ func TestSearch(t *testing.T) {
 }
 
 func TestSearchI(t *testing.T) {
-	root := &Node{Key: 5}
-	root.Left = &Node{Key: 3}
-	root.Left.Left = &Node{Key: 2}
-	root.Right = &Node{Key: 7}
-	root.Right.Left = &Node{Key: 6}
-	root.Right.Right = &Node{Key: 8}
+	root := testTree()
 
 	type args struct {
 		root *Node
@@ -103,6 +93,34 @@ func TestSearchI(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := SearchI(tt.args.root, tt.args.key); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Find() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestMin(t *testing.T) {
+	root := testTree()
+
+	tests := []struct {
+		name string
+		root *Node
+		want *Node
+	}{
+		{
+			name: "nil_root",
+			root: nil,
+			want: nil,
+		},
+		{
+			name: "valid_min",
+			root: root,
+			want: root.Left.Left,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Min(tt.root); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Min() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -166,5 +184,15 @@ func insert(root *Node, key int) *Node {
 		root.Right.Parent = root
 	}
 
+	return root
+}
+
+func testTree() *Node {
+	root := &Node{Key: 5}
+	root.Left = &Node{Key: 3}
+	root.Left.Left = &Node{Key: 2}
+	root.Right = &Node{Key: 7}
+	root.Right.Left = &Node{Key: 6}
+	root.Right.Right = &Node{Key: 8}
 	return root
 }

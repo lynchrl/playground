@@ -35,3 +35,11 @@ func SearchI(root *Node, key int) *Node {
 	}
 	return root
 }
+
+// Min returns the Node with the smallest key.
+func Min(root *Node) *Node {
+	for root != nil && root.Left != nil {
+		root = root.Left
+	}
+	return root
+}
