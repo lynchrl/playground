@@ -126,6 +126,34 @@ func TestMin(t *testing.T) {
 	}
 }
 
+func TestMax(t *testing.T) {
+	root := testTree()
+
+	tests := []struct {
+		name string
+		root *Node
+		want *Node
+	}{
+		{
+			name: "nil_root",
+			root: nil,
+			want: nil,
+		},
+		{
+			name: "valid_max",
+			root: root,
+			want: root.Right.Right,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Max(tt.root); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Min() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func BenchmarkSearch(b *testing.B) {
 	r := rand.New(rand.NewSource(42))
 	// Prepare a BST with 1000 nodes

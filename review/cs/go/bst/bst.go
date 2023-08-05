@@ -43,3 +43,11 @@ func Min(root *Node) *Node {
 	}
 	return root
 }
+
+// Max returns the Node with the largest key.
+func Max(root *Node) *Node {
+	for root != nil && root.Right != nil {
+		root = root.Right
+	}
+	return root
+}
