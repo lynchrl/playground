@@ -154,6 +154,44 @@ func TestMax(t *testing.T) {
 	}
 }
 
+func TestSuccessor(t *testing.T) {
+	root := testTree()
+
+	tests := []struct {
+		name string
+		node *Node
+		want *Node
+	}{
+		{
+			name: "nil_node",
+			node: nil,
+			want: nil,
+		},
+		{
+			name: "root_successor",
+			node: root,
+			want: root.Right.Left,
+		},
+		{
+			name: "leaf_successor",
+			node: root.Right.Left,
+			want: root.Right,
+		},
+		{
+			name: "no_successor",
+			node: root.Right.Right,
+			want: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Successor(tt.node); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Successor() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func BenchmarkSearch(b *testing.B) {
 	r := rand.New(rand.NewSource(42))
 	// Prepare a BST with 1000 nodes
@@ -216,11 +254,11 @@ func insert(root *Node, key int) *Node {
 }
 
 func testTree() *Node {
-	root := &Node{Key: 5}
-	root.Left = &Node{Key: 3}
-	root.Left.Left = &Node{Key: 2}
-	root.Right = &Node{Key: 7}
-	root.Right.Left = &Node{Key: 6}
-	root.Right.Right = &Node{Key: 8}
+	root := insert(nil, 5)
+	insert(root, 3)
+	insert(root, 7)
+	insert(root, 2)
+	insert(root, 6)
+	insert(root, 8)
 	return root
 }

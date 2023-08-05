@@ -51,3 +51,18 @@ func Max(root *Node) *Node {
 	}
 	return root
 }
+
+// Successor returns the successor of the given node, or nil if the
+// given node has no successor (it has the largest key).
+func Successor(node *Node) *Node {
+	if node == nil {
+		return nil
+	}
+	if node.Right != nil {
+		return Min(node.Right)
+	}
+	for node.Parent != nil && node == node.Parent.Right {
+		node = node.Parent
+	}
+	return node.Parent
+}
