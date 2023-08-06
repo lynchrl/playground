@@ -213,6 +213,28 @@ func TestInsert(t *testing.T) {
 	}
 }
 
+func TestDelete(t *testing.T) {
+	// TODO: Better tests/coverage.
+	want := &Node{Key: 5}
+	want.Left = &Node{Key: 3, Parent: want}
+	want.Right = &Node{Key: 7, Parent: want}
+	want.Left.Left = &Node{Key: 2, Parent: want.Left}
+	want.Left.Right = &Node{Key: 4, Parent: want.Left}
+
+	root := Insert(nil, 5)
+	Insert(root, 3)
+	Insert(root, 7)
+	Insert(root, 2)
+	Insert(root, 4)
+	Insert(root, 6)
+
+	Delete(root, root.Right.Left)
+
+	if diff := cmp.Diff(root, want); diff != "" {
+		t.Errorf("Delete() mismatch (-want +got):\n%s", diff)
+	}
+}
+
 func BenchmarkSearch(b *testing.B) {
 	r := rand.New(rand.NewSource(42))
 	// Prepare a BST with 1000 nodes

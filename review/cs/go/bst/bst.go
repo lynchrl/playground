@@ -81,3 +81,32 @@ func Insert(root *Node, key int) *Node {
 	}
 	return root
 }
+
+func transplant(root, u, v *Node) {
+	if u.Parent == nil {
+		root = v
+	} else if u == u.Parent.Left {
+		u.Parent.Left = v
+	} else {
+		u.Parent.Right = v
+	}
+	if v != nil {
+		v.Parent = u.Parent
+	}
+}
+
+// Delete removes a Node from the BST.
+func Delete(root *Node, z *Node) {
+	if z.Left == nil {
+		transplant(root, z, z.Right)
+	} else if z.Right == nil {
+		transplant(root, z, z.Left)
+	} else {
+		successor := Successor(z)
+		successor.Right = z.Right
+		successor.Right.Parent = successor
+		transplant(root, z, successor)
+		successor.Left = z.Left
+		successor.Left.Parent = successor
+	}
+}
