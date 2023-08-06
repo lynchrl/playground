@@ -66,3 +66,18 @@ func Successor(node *Node) *Node {
 	}
 	return node.Parent
 }
+
+// Insert inserts a key into the BST.
+func Insert(root *Node, key int) *Node {
+	if root == nil {
+		return &Node{Key: key}
+	}
+	if key < root.Key {
+		root.Left = Insert(root.Left, key)
+		root.Left.Parent = root
+	} else {
+		root.Right = Insert(root.Right, key)
+		root.Right.Parent = root
+	}
+	return root
+}

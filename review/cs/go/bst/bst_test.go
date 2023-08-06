@@ -4,6 +4,8 @@ import (
 	"math/rand"
 	"reflect"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestSearch(t *testing.T) {
@@ -192,6 +194,25 @@ func TestSuccessor(t *testing.T) {
 	}
 }
 
+func TestInsert(t *testing.T) {
+	want := &Node{Key: 5}
+	want.Left = &Node{Key: 3, Parent: want}
+	want.Right = &Node{Key: 7, Parent: want}
+
+	want.Left.Left = &Node{Key: 2, Parent: want.Left}
+	want.Left.Right = &Node{Key: 4, Parent: want.Left}
+
+	got := Insert(nil, 5)
+	Insert(got, 3)
+	Insert(got, 7)
+	Insert(got, 2)
+	Insert(got, 4)
+
+	if diff := cmp.Diff(got, want); diff != "" {
+		t.Errorf("Insert() mismatch (-want +got):\n%s", diff)
+	}
+}
+
 func BenchmarkSearch(b *testing.B) {
 	r := rand.New(rand.NewSource(42))
 	// Prepare a BST with 1000 nodes
@@ -230,35 +251,18 @@ func generateBST(r *rand.Rand, n int) *Node {
 	// Generate n-1 random keys for the left and right subtrees.
 	for i := 0; i < n-1; i++ {
 		key := r.Intn(1000)
-		insert(root, key)
-	}
-
-	return root
-}
-
-// Helper function to insert a key into the BST.
-func insert(root *Node, key int) *Node {
-	if root == nil {
-		return &Node{Key: key}
-	}
-
-	if key < root.Key {
-		root.Left = insert(root.Left, key)
-		root.Left.Parent = root
-	} else {
-		root.Right = insert(root.Right, key)
-		root.Right.Parent = root
+		Insert(root, key)
 	}
 
 	return root
 }
 
 func testTree() *Node {
-	root := insert(nil, 5)
-	insert(root, 3)
-	insert(root, 7)
-	insert(root, 2)
-	insert(root, 6)
-	insert(root, 8)
+	root := Insert(nil, 5)
+	Insert(root, 3)
+	Insert(root, 7)
+	Insert(root, 2)
+	Insert(root, 6)
+	Insert(root, 8)
 	return root
 }
